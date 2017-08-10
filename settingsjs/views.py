@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from . import signals
+from .utils import get_js_settings
 
 
 def settings_js(request, extra_context=None):
@@ -15,8 +16,10 @@ def settings_js(request, extra_context=None):
         context.update(extra_context)
 
     jssettings = getattr(context, 'settings', {})
-    if hasattr(settings, 'SETTINGS_JS'):
-        jssettings.update(settings.SETTINGS_JS)
+
+    data = get_js_settings()
+    if data:
+        jssettings.update(data)
 
     signals.collect_settings.send(
         sender=settings_js,
