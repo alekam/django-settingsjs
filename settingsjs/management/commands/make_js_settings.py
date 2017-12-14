@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
     def get_file_contents(self):
         return render_to_string('settingsjs/settings.js',
-                                {'jssettings': self.get_js_settings()})
+                                {'jssettings': json.dumps(self.get_js_settings())})
 
     def get_js_settings(self):
         jssettings = get_js_settings()
