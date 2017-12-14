@@ -1,7 +1,10 @@
-(function (window) {
-    var settings = {{ jssettings|safe }};
-    S = function () { };
-    S.get = function (key) { return settings[key]; };
-    S.set = function (key, val) { return settings[key] = val; };
-    window.Setting = window.S = S;
-})(window);
+'use strict';
+
+const settings = {{ jssettings|safe }};
+
+const S = {
+	get: function (key) { return settings[key]; },
+	set: function (key, val) { return settings[key] = val; }
+};
+
+module.exports = S;
