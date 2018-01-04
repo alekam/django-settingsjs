@@ -7,7 +7,7 @@ INSTALATION
 
 Add 'settingsjs' to your INSTALLED_APPS (for the templates)
 Include 'settingsjs.urls' in your urls.
-Add a script tag with src="{% url settings_js %}" 
+Add a script tag with src="{% url settings_js %}"
     e.g.
         <script type="text/javascript" src="{% url 'settings_js' %}"></script>
 
@@ -30,9 +30,15 @@ Use the SETTINGS_JS setting to specify settings:
     e.g.
         SETTINGS_JS = {
             'myapp-settings': {
-                "fu": "bar", 
+                "fu": "bar",
             }
         }
+
+Use the SETTINGS_JS_KEYS settings to export existing settings keys
+to JavaScript settings
+
+    e.g.
+        SETTINGS_JS_KEYS = ['STATIC_URL', 'CSRF_COOKIE_NAME', 'DEBUG']
 
 Use settingsjs.signals.collect_settings:
 
@@ -45,6 +51,48 @@ Use settingsjs.signals.collect_settings:
         def videos_settingsjs(sender, jssettings=None, **kwargs):
             if jssettings is not None:
                 jssettings['myapp-settings'] = {
-                    "fu": "bar", 
+                    "fu": "bar",
                 }
 
+
+
+Generate JavaScript settings static file
+========================================
+
+You can use the management command to generate static js settings file:
+
+        python manage.py make_js_settings
+
+Use SETTINGSJS_GENERATED_FILE in your django settings to specify
+generated file destination location
+
+
+
+JavaScript API
+==============
+
+    e.g.
+        // STATIC_URL = "/static/"
+        // Key "123" is not exists in settings
+
+        const DjangoSettings = require('settings')
+
+        DjangoSettings.get('STATIC_URL')
+        // returns "/static/"
+
+        // get unexisted keys
+        DjangoSettings.get('123')
+        // returns undefined
+        DjangoSettings.get('123', 123)
+        // returns 123
+
+        // rewrite settings values
+        DjangoSettings.set('123', 123)
+        DjangoSettings.get('123')
+        // returns 123
+
+        // work with static path
+        DjangoSettings.static('images/logo.png')
+        // returns '/static/images/logo.png'
+        DjangoSettings.static()
+        // returns '/static/'
